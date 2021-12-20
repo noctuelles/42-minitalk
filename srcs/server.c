@@ -17,19 +17,15 @@ enum server flags {
 
 typedef struct	s_server
 {
-	size_t	message_size;
-	size_t	char_recv;
+	size_t	msg_size;
+	char	*msg;
+	uint8_t	flags;
 	char	c_char;
 	size_t	offset;
 	pid_t	client_pid;
 }					t_server;
 
-t_server	server = {
-	.message_size = 0,
-	.c_char = 0,
-	.offset = sizeof(size_t) * 8,
-	.client_pid = 0
-};
+int	
 
 void	handle_char(int signum)
 {
@@ -66,15 +62,34 @@ void	handler(int signum, siginfo_t *siginfo, void *ucontext)
 	kill(sender_pid, signum);
 }
 
-int	main()
+
+
+int	set_sigaction()
 {
 	struct sigaction	sigact;
-	server.boffset = 7;
+
 	sigemptyset(&sigact.sa_mask);
 	sigact.sa_flags = SA_SIGINFO;
 	sigact.sa_sigaction = &handler;
-	sigaction(SIGUSR1, &sigact, NULL);
-	sigaction(SIGUSR2, &sigact, NULL);
+	if (sigaction(SIGUSR1, &sigact, NULL) == -1)
+		return (-1);
+	if (sigaction(SIGUSR2, &sigact, NULL) == -1)
+		return (-1);
+}
+
+int	main(void)
+{
+	if (!set_sigaction())
+		return (-1);
 	while (1)
-		pause();
+	{
+		while (!(server.flags & MALLOC))
+			pause();
+		server.msg = malloc(server.msg_size * sizeof(char));
+		if (!server.msg)
+			return (1);
+		while (!(server.flags & RDOK))
+			pause();
+	}
+	return (0);
 }
