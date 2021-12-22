@@ -6,26 +6,18 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 13:28:55 by plouvel           #+#    #+#             */
-/*   Updated: 2021/12/21 15:31:14 by plouvel          ###   ########.fr       */
+/*   Updated: 2021/12/22 03:10:37 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minitalk.h"
+#include "minitalk_server.h"
 #include "ft_printf.h"
 #include <unistd.h>
+#include <stdlib.h>
 
-t_server	server = 
-{
-	.msg = NULL,
-	.mchar = 0,
-	.msg_len = 0,
-	.msg_i = 0,
-	.flags = 0,
-	.offset = 63,
-	.clt_pid = 0
-};
+t_server	server; 
 
-void	receive_msg_size()
+void	receive_msg_size(int signum)
 {
 	if (signum == SIGUSR1)
 		server.msg_len |= (1ULL << server.offset);
@@ -38,20 +30,22 @@ void	receive_msg_size()
 		server.offset--;
 }
 
-void	receive_msg()
+void	receive_msg(int signum)
 {
 	if (signum == SIGUSR1)
 		server.mchar |= (1U << server.offset); 
 	if (server.offset == 0)
 	{
-		server.msg[server.msg_i++] = server.mchar;
-		if (server.msg_len == (server.msg_i + 1))
+		if (server.msg_i == server.msg_len)
 		{
 			server.msg[server.msg_i] = '\0';
 			server.flags |= MSG_OK;
 		}
 		else
+		{
+			server.msg[server.msg_i++] = server.mchar;
 			server.offset = 7;
+		}
 	}
 	else
 		server.offset--;
@@ -59,13 +53,12 @@ void	receive_msg()
 
 void	handler(int signum, siginfo_t *siginfo, void *ucontext)
 {
-	if (!server.clt_pid)
-		server.clt_pid = siginfo->si_pid;
-	if (!is_flag_set(MALLOC))
+	server.clt_pid = siginfo->si_pid;
+	if (!(server.flags & MALLOC))
 		receive_msg_size(signum);
-	if (!is_flag_set(MSG_OK))
+	if (!is_flag_set(MSG_OK) && is_flag_set(MALLOC))
 		receive_msg(signum);
-	if (kill(server.clt_pid, signum) == -1)
+	if (kill(server.clt_pid, SIGUSR1) == -1)
 		server.flags |= ERR;
 }
 
@@ -80,7 +73,8 @@ int	set_sigaction()
 		return (-1);
 	if (sigaction(SIGUSR2, &sigact, NULL) == -1)
 		return (-1);
-	ft_printf("{33;5}" WLC "{0}" HI S, getpid());
+	ft_putstr(CLR_SCREEN);
+	ft_printf("{33}" WLC "{0}" HI S, getpid());
 }
 
 int	main(void)
