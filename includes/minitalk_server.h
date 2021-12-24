@@ -6,12 +6,12 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 15:33:00 by plouvel           #+#    #+#             */
-/*   Updated: 2021/12/21 22:41:07 by plouvel          ###   ########.fr       */
+/*   Updated: 2021/12/24 00:49:02 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINITALK_SERVER_H
-#define MINITALK_SERVER_H
+# define MINITALK_SERVER_H
 
 # include <signal.h>
 # include <stdint.h>
@@ -28,27 +28,25 @@
 # define CODE_SIGACT_FAIL -1
 # define CODE_PONG_FAIL -2
 # define CODE_MALLOC_FAIL -3
-
-# define S_0 "-----------------------------------"
-# define S_1 "------------------------\n\n"
-# define S S_0 S_1
+# define S_0 "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+# define S_1 "━━━━━━━━━━━━━━━━━━━━━━━━\n"
 
 # define W_0 "\n███    ███ ██ ███    ██ ██ ████████  █████  ██      ██   ██\n"
 # define W_1 "████  ████ ██ ████   ██ ██    ██    ██   ██ ██      ██  ██ \n"
 # define W_2 "██ ████ ██ ██ ██ ██  ██ ██    ██    ███████ ██      █████  \n" 
 # define W_3 "██  ██  ██ ██ ██  ██ ██ ██    ██    ██   ██ ██      ██  ██ \n" 
 # define W_4 "██      ██ ██ ██   ████ ██    ██    ██   ██ ███████ ██   ██\n\n"
-# define WLC W_0 W_1 W_2 W_3 W_4
 
-# define HI "{4}Hello.. feel free to send me messages at :{0} [{31}%u{0}] :)\n"
-# define LISTEN "{3;1}Listening...{0}\n"
-# define MSG "\n\t{4}Message received from{0} [{31}%u{0}] :\n\n\"%s\"\n"
+# define HI "Hello.. feel free to send me messages at : [{31}%u{0}] :)\n"
+# define LISTEN "\n{3;1}Listening...{0}\n\n"
+# define MSG "\n\t{1}Message received from{0} [{31}%u{0}] :\n\n\"%s\"\n\n"
 
 typedef enum e_server_flags
 {
 	MALLOC=0x01,
 	MSG_OK=0x02,
-	ERR=0x04
+	ERR=0x04,
+	MSG_RCV=0x08
 }				t_server_flags;
 
 typedef struct s_minitalk_server
@@ -62,12 +60,12 @@ typedef struct s_minitalk_server
 	pid_t	clt_pid;
 }				t_server;
 
-extern t_server server;
+extern t_server	g_server;
 
-void			prepare_new_msg();
-void			putmsg();
+void			prepare_new_msg(void);
+void			putmsg(void);
 int				raise_error(int errcode);
 int				await_reception(t_server_flags flag);
-unsigned int	is_flag_set(t_server_flags flag);
+void			handle_interrupt(int signum);
 
 #endif

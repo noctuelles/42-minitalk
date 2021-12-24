@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 13:28:55 by plouvel           #+#    #+#             */
-/*   Updated: 2021/12/22 03:10:37 by plouvel          ###   ########.fr       */
+/*   Updated: 2021/12/24 00:50:04 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,54 +15,50 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-t_server	server; 
+t_server	g_server;
 
 void	receive_msg_size(int signum)
 {
 	if (signum == SIGUSR1)
-		server.msg_len |= (1ULL << server.offset);
-	if (server.offset == 0)
+		g_server.msg_len |= (1ULL << g_server.offset);
+	if (g_server.offset == 0)
 	{
-		server.offset = 7;
-		server.flags |= MALLOC;
+		g_server.offset = 7;
+		g_server.flags |= MALLOC;
 	}
 	else
-		server.offset--;
+		g_server.offset--;
 }
 
 void	receive_msg(int signum)
 {
 	if (signum == SIGUSR1)
-		server.mchar |= (1U << server.offset); 
-	if (server.offset == 0)
+		g_server.mchar |= (1U << g_server.offset);
+	if (g_server.offset == 0)
 	{
-		if (server.msg_i == server.msg_len)
+		g_server.msg[g_server.msg_i++] = g_server.mchar;
+		g_server.mchar = 0;
+		g_server.offset = 7;
+		if (g_server.msg_i == g_server.msg_len)
 		{
-			server.msg[server.msg_i] = '\0';
-			server.flags |= MSG_OK;
-		}
-		else
-		{
-			server.msg[server.msg_i++] = server.mchar;
-			server.offset = 7;
+			g_server.msg[g_server.msg_i] = '\0';
+			g_server.flags |= MSG_OK;
 		}
 	}
 	else
-		server.offset--;
+		g_server.offset--;
 }
 
 void	handler(int signum, siginfo_t *siginfo, void *ucontext)
 {
-	server.clt_pid = siginfo->si_pid;
-	if (!(server.flags & MALLOC))
+	g_server.clt_pid = siginfo->si_pid;
+	if (!(g_server.flags & MALLOC))
 		receive_msg_size(signum);
-	if (!is_flag_set(MSG_OK) && is_flag_set(MALLOC))
+	else
 		receive_msg(signum);
-	if (kill(server.clt_pid, SIGUSR1) == -1)
-		server.flags |= ERR;
 }
 
-int	set_sigaction()
+int	set_sigaction(void)
 {
 	struct sigaction	sigact;
 
@@ -73,8 +69,14 @@ int	set_sigaction()
 		return (-1);
 	if (sigaction(SIGUSR2, &sigact, NULL) == -1)
 		return (-1);
+	sigemptyset(&sigact.sa_mask);
+	sigact.sa_flags = 0;
+	sigact.sa_sigaction = NULL;
+	sigact.sa_handler = &handle_interrupt;
+	if (sigaction(SIGINT, &sigact, NULL) == -1)
+		return (-1);
 	ft_putstr(CLR_SCREEN);
-	ft_printf("{33}" WLC "{0}" HI S, getpid());
+	ft_printf("{33}" W_0 W_1 W_2 W_3 W_4 "{0}" HI S_0 S_1, getpid());
 }
 
 int	main(void)
@@ -86,10 +88,12 @@ int	main(void)
 		prepare_new_msg();
 		if (await_reception(MALLOC) == -1)
 			return (raise_error(CODE_PONG_FAIL));
-		server.msg = malloc((server.msg_len + 1) * sizeof(char));
-		if (!server.msg)
+		g_server.msg = malloc((g_server.msg_len + 1) * sizeof(char));
+		if (!g_server.msg)
 			return (raise_error(CODE_MALLOC_FAIL));
 		if (await_reception(MSG_OK) == -1)
+			return (raise_error(CODE_PONG_FAIL));
+		if (kill(g_server.clt_pid, SIGUSR2) == -1)
 			return (raise_error(CODE_PONG_FAIL));
 		putmsg();
 	}

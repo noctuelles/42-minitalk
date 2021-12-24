@@ -6,12 +6,12 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 15:31:36 by plouvel           #+#    #+#             */
-/*   Updated: 2021/12/22 02:12:48 by plouvel          ###   ########.fr       */
+/*   Updated: 2021/12/23 12:37:53 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINITALK_CLIENT_H
-#define MINETALK_CLIENT_H
+# define MINETALK_CLIENT_H
 
 # include <stdint.h>
 # include <signal.h>
@@ -32,6 +32,8 @@
 # define CODE_SRV_TIMEOUT -3
 # define CODE_BAD_ACK -4
 
+# define TIMEOUT_US 2000
+
 typedef struct s_minitalk_client
 {
 	const char	*msg;
@@ -45,5 +47,10 @@ enum e_client_flags
 	MSG_ACK=0x01,
 	PONG_OK=0x02
 };
+
+extern t_client	g_client;
+
+int	raise_error(int errcode);
+int	send_message(void);
 
 #endif

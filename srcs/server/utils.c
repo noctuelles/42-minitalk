@@ -6,47 +6,41 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 15:18:08 by plouvel           #+#    #+#             */
-/*   Updated: 2021/12/22 02:42:16 by plouvel          ###   ########.fr       */
+/*   Updated: 2021/12/24 00:48:41 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minitalk_server.h"
+#include "minitalk_g_server.h"
 #include "ft_printf.h"
 #include <stdlib.h>
 #include <unistd.h>
 
-void	prepare_new_msg()
+void	prepare_new_msg(void)
 {
-	server.msg = NULL;
-	server.mchar = 0;
-	server.msg_len = 0;
-	server.msg_i = 0;
-	server.flags = 0;
-	server.offset = 63;
-	server.clt_pid = 0;
+	ft_memset(&g_server, 0, sizeof(t_server));
+	g_server.offset = 63;
 	ft_printf(LISTEN);
-}
-
-unsigned int	is_flag_set(t_server_flags flag)
-{
-	if (server.flags & flag)
-		return (1);
-	return (0);
+	pause();
 }
 
 int	await_reception(t_server_flags flag)
 {
-	while (!is_flag_set(flag) && !is_flag_set(ERR))
-		pause();
-	if (server.flags & ERR)
-		return (-1);
+	while (!(g_server.flags & flag))
+	{
+		usleep(200);
+		if (kill(g_server.clt_pid, SIGUSR1) == -1)
+			return (-1);
+	}
 	return (0);
 }
 
-void	putmsg()
+void	putmsg(void)
 {
-	ft_printf(MSG, server.clt_pid, server.msg);
-	free(server.msg);
+	ft_putstr(S_0 S_1);
+	ft_printf(MSG, g_server.clt_pid, g_server.msg);
+	ft_printf("Message size : %u\n", g_server.msg_len);
+	ft_putstr(S_0 S_1);
+	free(g_server.msg);
 }
 
 int	raise_error(int errcode)
@@ -57,5 +51,13 @@ int	raise_error(int errcode)
 		ft_printf(FATAL ACK_SIGNAL_ERROR);
 	else if (errcode == CODE_MALLOC_FAIL)
 		ft_printf(FATAL MALLOC_FAIL);
+	free(g_server.msg);
 	return (errcode);
+}
+
+void	handle_interrupt(int signum)
+{
+	ft_printf("\n{1}Goodbye...{0}\n");
+	free(g_server.msg);
+	exit(1);
 }
