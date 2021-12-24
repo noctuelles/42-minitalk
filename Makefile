@@ -6,7 +6,7 @@
 #    By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/21 13:26:15 by plouvel           #+#    #+#              #
-#    Updated: 2021/12/24 02:10:48 by plouvel          ###   ########.fr        #
+#    Updated: 2021/12/24 02:14:40 by plouvel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -45,7 +45,7 @@ $(OBJS_DIR)%.o:	$(SRCS_DIR)%.c
 				${CC} ${CFLAGS} -c $< -o $@
 
 makeft:
-	make -C libft all
+				make -C libft all
 
 all:			$(NAME)
 
@@ -59,4 +59,4 @@ fclean:			clean
 
 re:				fclean all
 
-.PHONY:	all clean fclean re
+.PHONY:			$(NAME) makeft all clean fclean re
