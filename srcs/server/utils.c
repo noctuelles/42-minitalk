@@ -6,11 +6,11 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 15:18:08 by plouvel           #+#    #+#             */
-/*   Updated: 2021/12/24 00:48:41 by plouvel          ###   ########.fr       */
+/*   Updated: 2021/12/24 01:45:37 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minitalk_g_server.h"
+#include "minitalk_server.h"
 #include "ft_printf.h"
 #include <stdlib.h>
 #include <unistd.h>
@@ -57,6 +57,7 @@ int	raise_error(int errcode)
 
 void	handle_interrupt(int signum)
 {
+	(void) signum;
 	ft_printf("\n{1}Goodbye...{0}\n");
 	free(g_server.msg);
 	exit(1);

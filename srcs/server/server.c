@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 13:28:55 by plouvel           #+#    #+#             */
-/*   Updated: 2021/12/24 00:50:04 by plouvel          ###   ########.fr       */
+/*   Updated: 2021/12/24 01:46:34 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ void	receive_msg(int signum)
 
 void	handler(int signum, siginfo_t *siginfo, void *ucontext)
 {
+	(void) ucontext;
 	g_server.clt_pid = siginfo->si_pid;
 	if (!(g_server.flags & MALLOC))
 		receive_msg_size(signum);
@@ -77,11 +78,12 @@ int	set_sigaction(void)
 		return (-1);
 	ft_putstr(CLR_SCREEN);
 	ft_printf("{33}" W_0 W_1 W_2 W_3 W_4 "{0}" HI S_0 S_1, getpid());
+	return (0);
 }
 
 int	main(void)
 {
-	if (!set_sigaction())
+	if (set_sigaction() == -1)
 		return (raise_error(CODE_SIGACT_FAIL));
 	while (1)
 	{
