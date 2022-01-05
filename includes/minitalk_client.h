@@ -6,12 +6,12 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 15:31:36 by plouvel           #+#    #+#             */
-/*   Updated: 2021/12/23 12:37:53 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/01/05 17:20:57 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINITALK_CLIENT_H
-# define MINETALK_CLIENT_H
+# define MINITALK_CLIENT_H
 
 # include <stdint.h>
 # include <signal.h>
