@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/23 05:32:06 by plouvel           #+#    #+#             */
-/*   Updated: 2021/12/23 12:38:20 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/01/05 17:45:17 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,8 @@ int	raise_error(int errcode)
 		ft_printf(FATAL TIMEOUT);
 	else if (errcode == CODE_BAD_ACK)
 		ft_printf(FATAL BAD_ACK);
+	else if (errcode == CODE_EMPTY_STR)
+		ft_printf(FATAL EMPTY_STR);
 	return (errcode);
 }
 

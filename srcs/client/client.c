@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 19:44:29 by plouvel           #+#    #+#             */
-/*   Updated: 2021/12/24 02:12:58 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/01/05 17:45:17 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ int	main(int argc, char **argv)
 		return (raise_error(CODE_SIGACT_FAIL));
 	if (g_client.srv_pid == 0)
 		return (raise_error(CODE_INVALID_PID));
+	if (g_client.msg_len == 0)
+		return (raise_error(CODE_EMPTY_STR));
 	msg_err = send_message();
 	if (msg_err != 0)
 		return (raise_error(msg_err));

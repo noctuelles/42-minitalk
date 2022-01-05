@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 15:31:36 by plouvel           #+#    #+#             */
-/*   Updated: 2022/01/05 17:20:57 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/01/05 17:44:40 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # define INVALID_PID "Unable to send message : the PID might be invalid.\n"
 # define TIMEOUT "Server time-out, your system might be too slow.\n"
 # define SETUP_SIGACT_ERROR "Unable to setup signal action.\n"
+# define EMPTY_STR "The string you're trying to send is empty... not wasting my time!\n"
 # define ARGC_1 "No P.I.D and message specified.\n"
 # define ARGC_2 "No P.I.D or message specified.\n"
 # define SMSG_ACK "The message has been delivered to the server [{31}%u{0}] !\n"
@@ -31,6 +32,7 @@
 # define CODE_SIGACT_FAIL -2
 # define CODE_SRV_TIMEOUT -3
 # define CODE_BAD_ACK -4
+# define CODE_EMPTY_STR -5
 
 # define TIMEOUT_US 2000
 
