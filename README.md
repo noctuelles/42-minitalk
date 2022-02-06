@@ -14,8 +14,8 @@ This minitalk can send over 10 000 chars in less than a second..
 
 ## Screenshot
 
-![server](assets/imgs/server.png)
-![client](assets/imgs/client.png)
+<img src="assets/imgs/client.png" width="700"/>
+<img src="assets/imgs/server.png" width="700"/>
 
 ## How does it works ?
 
