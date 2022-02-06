@@ -14,8 +14,10 @@ This minitalk can send over 10 000 chars in less than a second..
 
 ## Screenshot
 
-<img src="assets/imgs/client.png" width="500" align="center"/>
-<img src="assets/imgs/server.png" width="500" align="center"/>
+<p align="center">
+	<img src="assets/imgs/client.png" width="500"/>
+	<img src="assets/imgs/server.png" width="500"/>
+</p>
 
 ## How does it works ?
 
