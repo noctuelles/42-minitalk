@@ -2,6 +2,7 @@
 
 [![42](https://img.shields.io/badge/42-common_core-green.svg)](https://shields.io/)
 [![Vim](https://img.shields.io/badge/--019733?logo=vim)](https://www.vim.org/)
+[![made-with-Markdown](https://img.shields.io/badge/Made%20with-Markdown-1f425f.svg)](http://commonmark.org)
 
 A tiny client / server implementation only using two UNIX signal.
 
