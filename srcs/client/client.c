@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 19:44:29 by plouvel           #+#    #+#             */
-/*   Updated: 2022/01/05 17:45:17 by plouvel          ###   ########.fr       */
+/*   Updated: 2022/02/13 15:32:12 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	main(int argc, char **argv)
 	g_client.srv_pid = ft_atoi(argv[1]);
 	if (set_sigaction() == -1)
 		return (raise_error(CODE_SIGACT_FAIL));
-	if (g_client.srv_pid == 0)
+	if (g_client.srv_pid <= 0)
 		return (raise_error(CODE_INVALID_PID));
 	if (g_client.msg_len == 0)
 		return (raise_error(CODE_EMPTY_STR));
