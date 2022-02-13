@@ -45,6 +45,7 @@ You should be carefull about error cases :
 * *How your client manages abrupt server closing* ?
 * *Watch out for* **leaks** !
 * *Are you using only [async-signal-safe](https://man7.org/linux/man-pages/man7/signal-safety.7.html) function in your signal handler ?*
+* *Did you test your client with a P.I.D of -1 ?*
 
 **Don't hesitate to spice up your project !**
 
